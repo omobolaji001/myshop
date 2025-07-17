@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'coupons.apps.CouponsConfig',
     'shop.apps.ShopConfig',
     'rosetta',
+    'parler',
 ]
 
 MIDDLEWARE = [
@@ -123,6 +124,19 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+
+# django-parler settings
+
+PARLER_LANGUAGES = {
+    None: (
+        {'code': 'en'}, {'code': 'es'},
+    ),
+    'default': {
+        'fallback': 'en',
+        'hide_translated': False,
+    }
+}
 
 
 # Static files (CSS, JavaScript, Images)

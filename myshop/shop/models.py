@@ -1,16 +1,19 @@
 from django.db import models
 from django.urls import reverse
+from parler.models import TranslatableModel, TranslatedFields
 
 
-class Category(models.Model):
+class Category(TranslatableModel):
     """ Category class """
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=200, unique=True)
+    translations = TranslatedFields(
+        name = models.CharField(max_length=200),
+        slug = models.SlugField(max_length=200, unique=True)
+    )
 
     class Meta:
         """ Metadata """
-        ordering = ['name']
-        indexes = [models.Index(fields=['name']), ]
+        # ordering = ['name']
+        # indexes = [models.Index(fields=['name']), ]
         verbose_name = 'category'
         verbose_name_plural = 'categories'
 
@@ -23,14 +26,16 @@ class Category(models.Model):
         return reverse( 'shop:product_list_by_category', args=[self.slug] )
 
 
-class Product(models.Model):
+class Product(TranslatableModel):
     """ Product class """
+    translations = TranslatedFields(
+        name = models.CharField(max_length=200),
+        slug = models.SlugField(max_length=200),
+        description = models.TextField(blank=True)
+    )
     category = models.ForeignKey(Category, related_name='products',
                                  on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=200)
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
-    description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -38,9 +43,9 @@ class Product(models.Model):
 
     class Meta:
         """ metadata """
-        ordering = ['name']
+        # ordering = ['name']
         indexes = [
-            models.Index(fields=['name']),
+            # models.Index(fields=['name']),
             models.Index(fields=['-created']),
         ]
 
