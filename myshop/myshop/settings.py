@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'shop.apps.ShopConfig',
     'rosetta',
     'parler',
+    'localflavor',
 ]
 
 MIDDLEWARE = [
