@@ -55,4 +55,7 @@ class Product(TranslatableModel):
 
     def get_absolute_url(self):
         """ Returns absolute url of a product """
-        return reverse( 'shop:product_detail', args=[self.id, self.slug] )
+        return reverse(
+            'shop:product_detail',
+            args=[self.id, self.slug]
+        )
