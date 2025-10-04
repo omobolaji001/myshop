@@ -21,6 +21,9 @@ from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
 from django.utils.translation import gettext_lazy as _
 from payment import webhooks
+from rest_framework import routers
+
+router = routers.DefaultRouter()
 
 urlpatterns = i18n_patterns(
     path('admin/', admin.site.urls),
@@ -30,6 +33,11 @@ urlpatterns = i18n_patterns(
     path(_('coupons/'), include('coupons.urls', namespace='coupons')),
     path('rosetta/', include('rosetta.urls')),
     path('', include('shop.urls', namespace='shop')),
+    path('api/shop/', include('shop.api.urls', namespace='api_shop')),
+    path('api/cart/', include('cart.api.urls', namespace='api_cart')),
+    path('api/orders/', include('orders.api.urls', namespace='api_orders')),
+    path('api/payment/', include('payment.api.urls', namespace='api_payment')),
+    path('api/', include(router.urls)),
 )
 
 urlpatterns += [
