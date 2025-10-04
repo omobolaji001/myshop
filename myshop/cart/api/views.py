@@ -13,13 +13,11 @@ class CartViewSet(viewsets.ViewSet):
     """ Cart viewset """
     permission_classes = [AllowAny]
 
-    def get_cart(self, request):
-        """ Helper method to get the cart instance """
-        return Cart(request)
 
-    def list(self, request):
+    @action(detail=False, methods=['get'])
+    def cart_detail(self, request):
         """ Get current cart """
-        cart = self.get_cart(request)
+        cart = Cart(request)
         serializer = CartSerializer(cart)
 
         return Response(serializer.data)
@@ -39,7 +37,7 @@ class CartViewSet(viewsets.ViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        cart = self.get_cart(request)
+        cart = Cart(request)
         cart.add(
             product=product,
             quantity=quantity,
@@ -62,7 +60,7 @@ class CartViewSet(viewsets.ViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        cart = self.get_cart(request)
+        cart = Cart(request)
         cart.remove(product)
         serializer = CartSerializer(cart)
 
@@ -85,8 +83,8 @@ class CartViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        cart = self.get_cart(request)
-        request.session['coupon_id'] = coupon.id
+        cart = Cart(request)
+        cart.session['coupon_id'] = coupon.id
         cart.save()
         serializer = CartSerializer(cart)
 
@@ -95,7 +93,7 @@ class CartViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['post'])
     def clear(self, request):
         """ Clear the current cart """
-        cart = self.get_cart(request)
+        cart = Cart(request)
         cart.clear()
 
         return Response(
