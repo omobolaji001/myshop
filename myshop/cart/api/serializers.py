@@ -16,32 +16,34 @@ class CartItemSerializer(serializers.Serializer):
         decimal_places=2,
         read_only=True
     )
-    total_price = serializers.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        read_only=True
-    )
+    total_price = serializers.SerializerMethodField()
+
+    def get_total_price(self, obj):
+        """ Return the subtotal of the item """
+        return Decimal(obj['price']) * obj['quantity']
 
 
 class CartSerializer(serializers.Serializer):
     """ Cart serializer """
     items = CartItemSerializer(many=True, read_only=True)
-    total_price = serializers.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        read_only=True
-    )
+    total_price = serializers.SerializerMethodField()
     coupon_id = serializers.IntegerField(read_only=True, allow_null=True)
     discount = serializers.DecimalField(
         max_digits=10,
         decimal_places=2,
         read_only=True
     )
-    total_price_after_discount = serializers.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        read_only=True
-    )
+    total_price_after_discount = serializers.SerializerMethodField()
+
+    def get_total_price(self, obj):
+        """ Return total price of the items in the cart """
+        return obj.get_total_price()
+
+    def get_total_price_after_discount(self):
+        """ Return total price of the items
+        in the cart after discount is applied
+        """
+        obj.get_total_price_after_discount()
 
     def to_representation(self, cart):
         """ Returns the cart details """
